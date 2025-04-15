@@ -1,0 +1,94 @@
+name: Launch ClickHouse Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      cpu_cores:
+        description: 'Number of CPU cores per node'
+        required: true
+        default: '16'
+      ram_gb:
+        description: 'RAM in GB per node'
+        required: true
+        default: '64'
+      clickhouse_version:
+        description: 'ClickHouse version'
+        required: true
+        default: '25.3.2.39'
+      cluster_name:
+        description: 'Cluster name'
+        required: true
+        default: 'clickhouse_cluster'
+      shard_count:
+        description: 'Number of shards'
+        required: true
+        default: '1'
+      replica_count:
+        description: 'Number of replicas per shard'
+        required: true
+        default: '3'
+      keeper_ips:
+        description: 'ClickHouse Keeper IPs (comma separated)'
+        required: true
+      server_ips:
+        description: 'ClickHouse Server IPs (comma separated)'
+        required: true
+      ssh_user:
+        description: 'SSH user'
+        required: true
+        default: 'azureuser'
+      ssh_key:
+        description: 'SSH private key (base64 encoded)'
+        required: true
+      environment:
+        description: 'Environment (development, testing, production)'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - development
+          - testing
+          - production
+      hardware_profile:
+        description: 'Hardware profile'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - small
+          - medium
+          - large
+          - custom
+      ssl_enabled:
+        description: 'Enable SSL'
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  trigger-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deployment workflow
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          repository: yourusername/clickhouse-ansible-private
+          event-type: deploy-clickhouse
+          client-payload: |
+            {
+              "cpu_cores": "${{ github.event.inputs.cpu_cores }}",
+              "ram_gb": "${{ github.event.inputs.ram_gb }}",
+              "clickhouse_version": "${{ github.event.inputs.clickhouse_version }}",
+              "cluster_name": "${{ github.event.inputs.cluster_name }}",
+              "shard_count": "${{ github.event.inputs.shard_count }}",
+              "replica_count": "${{ github.event.inputs.replica_count }}",
+              "keeper_ips": "${{ github.event.inputs.keeper_ips }}",
+              "server_ips": "${{ github.event.inputs.server_ips }}",
+              "ssh_user": "${{ github.event.inputs.ssh_user }}",
+              "ssh_key": "${{ github.event.inputs.ssh_key }}",
+              "environment": "${{ github.event.inputs.environment }}",
+              "hardware_profile": "${{ github.event.inputs.hardware_profile }}",
+              "ssl_enabled": "${{ github.event.inputs.ssl_enabled }}"
+            }
