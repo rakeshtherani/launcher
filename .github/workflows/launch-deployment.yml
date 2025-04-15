@@ -76,17 +76,13 @@ jobs:
           event-type: deploy-clickhouse
           client-payload: |
             {
-              "cpu_cores": "${{ steps.parse.outputs.cpu_cores }}",
-              "ram_gb": "${{ steps.parse.outputs.ram_gb }}",
-              "clickhouse_version": "${{ github.event.inputs.clickhouse_version }}",
-              "cluster_name": "${{ steps.parse.outputs.cluster_name }}",
-              "shard_count": "${{ steps.parse.outputs.shard_count }}",
-              "replica_count": "${{ steps.parse.outputs.replica_count }}",
+              "hw_config": "${{ steps.parse.outputs.cpu_cores }},${{ steps.parse.outputs.ram_gb }}",
+              "ch_version": "${{ github.event.inputs.clickhouse_version }}",
+              "cl_config": "${{ steps.parse.outputs.cluster_name }},${{ steps.parse.outputs.shard_count }},${{ steps.parse.outputs.replica_count }}",
               "keeper_ips": "${{ github.event.inputs.keeper_ips }}",
               "server_ips": "${{ github.event.inputs.server_ips }}",
-              "ssh_user": "${{ steps.parse.outputs.ssh_user }}",
-              "ssh_key": "${{ steps.parse.outputs.ssh_key }}",
+              "ssh_config": "${{ steps.parse.outputs.ssh_user }},${{ steps.parse.outputs.ssh_key }}",
               "environment": "${{ github.event.inputs.environment }}",
-              "hardware_profile": "${{ github.event.inputs.hardware_profile }}",
+              "hw_profile": "${{ github.event.inputs.hardware_profile }}",
               "ssl_enabled": "${{ github.event.inputs.ssl_enabled }}"
             }
