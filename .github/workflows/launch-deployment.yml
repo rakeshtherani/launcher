@@ -1,5 +1,4 @@
 name: Launch ClickHouse Deployment
-
 on:
   workflow_dispatch:
     inputs:
@@ -65,7 +64,6 @@ on:
         required: true
         default: true
         type: boolean
-
 jobs:
   trigger-deployment:
     runs-on: ubuntu-latest
@@ -74,7 +72,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.PAT_TOKEN }}
-          repository: yourusername/clickhouse-ansible-private
+          repository: rakeshtherani/Clickhouse-Custom-Ansible-Project-v1
           event-type: deploy-clickhouse
           client-payload: |
             {
